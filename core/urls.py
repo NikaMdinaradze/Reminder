@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from todo.views import ToDoList#, ToDoDetail
+from todo.views import ToDoList, ToDoDetail
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularSwaggerView,
@@ -25,7 +25,7 @@ from drf_spectacular.views import (
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("todos/", ToDoList.as_view()),
-    # path("todos/", ToDoDetail.as_view()),
+    path("todos/<int:pk>", ToDoDetail.as_view()),
     path('api/schema/', SpectacularAPIView.as_view(), name='api-schema'),
     path(
         'api/docs/',

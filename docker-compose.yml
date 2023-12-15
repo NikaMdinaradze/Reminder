@@ -12,7 +12,7 @@ services:
       db:
         condition: 'service_healthy'
     environment:
-      - POSTGRES_NAME=postgres_db  # Change from POSTGRES_NAME to POSTGRES_DB
+      - POSTGRES_NAME=postgres  # Change from POSTGRES_NAME to POSTGRES_DB
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 
@@ -21,7 +21,7 @@ services:
     volumes:
       - ./data/db:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_DB=postgres_db
+      - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     healthcheck:
