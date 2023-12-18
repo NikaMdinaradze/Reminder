@@ -8,3 +8,4 @@ class ToDo(models.Model):
     todo = models.CharField(max_length=2000)
     created = models.DateTimeField(auto_now_add=True)
     deadline = models.DateTimeField()
+    owner = models.ForeignKey('auth.User', related_name='todos', on_delete=models.CASCADE)
