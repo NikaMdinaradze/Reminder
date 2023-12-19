@@ -34,15 +34,14 @@ class ToDoDetail(APIView):
     permission_classes = [IsOwner]
     serializer_class = ToDoSerializer
 
-    @staticmethod
-    def get_object(pk):
+    def get_object(self, pk):  # noqa
         try:
             return ToDo.objects.get(pk=pk)
         except ToDo.DoesNotExist:
-            raise Http404
+            raise Http404()
 
     def put(self, request, pk):
-        """ Updates User's ToDo with id"""
+        """ Updates User's ToDo with Id"""
         todo = self.get_object(pk)
         serializer = self.serializer_class(todo, data=request.data)
         if not serializer.is_valid():
@@ -51,8 +50,7 @@ class ToDoDetail(APIView):
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
 
     def delete(self, request, pk):
-        """ Deletes User's ToDo with id"""
+        """ Deletes User's ToDo with Id"""
         todo = self.get_object(pk)
         todo.delete()
         return Response(status.HTTP_204_NO_CONTENT)
-
