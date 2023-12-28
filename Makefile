@@ -22,3 +22,7 @@ run:
 run_tests:
 	@echo "running tests docker"
 	docker-compose run --rm web python manage.py test
+
+createsuperuser:
+	@echo "creating super user"
+	docker-compose run --rm web python manage.py createsuperuser
