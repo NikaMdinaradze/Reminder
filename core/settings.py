@@ -82,6 +82,7 @@ WSGI_APPLICATION = "core.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 import os
+import sys
 
 DATABASES = {
     "default": {
@@ -93,7 +94,11 @@ DATABASES = {
         "PORT": 5432,  # default postgres port
     }
 }
-
+if "test" in sys.argv:
+    DATABASES["default"] = {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": ":memory:",
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
