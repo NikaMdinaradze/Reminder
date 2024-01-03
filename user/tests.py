@@ -1,3 +1,5 @@
+import copy
+
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
@@ -37,9 +39,8 @@ class UserModelSerializerTest(TestCase):
     test class for user's serializers
     """
 
-    def setUp(self):
-        self.valid_data = VALID_DATA
-        self.invalid_datas = INVALID_DATA
+    valid_data = copy.deepcopy(VALID_DATA)
+    invalid_datas = copy.deepcopy(INVALID_DATA)
 
     def test_valid_serializer_data(self):
         """
@@ -85,7 +86,7 @@ class RegisterTest(APITestCase):
         """
         testing register endpoint with valid data
         """
-        data = VALID_DATA
+        data = copy.deepcopy(VALID_DATA)
 
         response = self.client.post(self.url, data, format="json")
 
