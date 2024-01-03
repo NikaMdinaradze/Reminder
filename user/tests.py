@@ -6,7 +6,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from user.serializers import UserCreateSerializer, UserGetSerializer
+from user.serializers import UserSerializer
 
 VALID_DATA = {
     "username": "gorgasali",
@@ -47,7 +47,7 @@ class UserModelSerializerTest(TestCase):
         testing UserCreate serializer with valid data
         """
 
-        serializer = UserCreateSerializer(data=self.valid_data)
+        serializer = UserSerializer(data=self.valid_data)
         self.assertTrue(serializer.is_valid())
 
     def test_invalid_serializer_data(self):
@@ -56,7 +56,7 @@ class UserModelSerializerTest(TestCase):
         """
 
         for invalid_data in self.invalid_datas:
-            serializer = UserCreateSerializer(data=invalid_data)
+            serializer = UserSerializer(data=invalid_data)
             self.assertFalse(serializer.is_valid())
 
     def test_serialization(self):
@@ -64,7 +64,7 @@ class UserModelSerializerTest(TestCase):
         testing UserGetSerializer
         """
         instance = User.objects.create(**self.valid_data)
-        serializer = UserGetSerializer(instance)
+        serializer = UserSerializer(instance)
         expected_data = {
             "username": "gorgasali",
             "first_name": "vaxtangi",

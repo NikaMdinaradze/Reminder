@@ -5,7 +5,7 @@ install_requirements:
 
 makemigrations:
 	@echo "Making Migration files"
-	python manage.py makemigrations
+	docker-compose run --rm web python manage.py makemigrations
 
 migrate:
 	@echo "Running Migrations Docker"

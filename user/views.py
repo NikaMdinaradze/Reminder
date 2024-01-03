@@ -3,12 +3,12 @@ from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .serializers import UserCreateSerializer, UserGetSerializer
+from .serializers import UserSerializer
 
 
 # Create your views here.
 class Register(APIView):
-    serializer_class = UserCreateSerializer
+    serializer_class = UserSerializer
 
     def post(self, request):
         """Creates User (Registration)"""
@@ -25,8 +25,8 @@ class UserMe(APIView):
 
     def get_serializer_class(self):
         if self.request.method == "GET":
-            return UserGetSerializer
-        return UserCreateSerializer
+            return UserSerializer
+        return UserSerializer
 
     @staticmethod
     def get_user(request):
