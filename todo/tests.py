@@ -1,11 +1,17 @@
-from datetime import datetime, timedelta
-
 from django.contrib.auth.models import User
 from django.test import TestCase
+from django.utils import timezone
 
 from .models import ToDo
 
 # Create your tests here.
+
+TODO_VALID_DATA = {
+    "title": "Test Task",
+    "todo": "Do something",
+    "created": timezone.now(),
+    "deadline": timezone.now() + timezone.timedelta(days=1),
+}
 
 
 class ToDoModelTest(TestCase):
@@ -17,7 +23,7 @@ class ToDoModelTest(TestCase):
         self.todo = ToDo.objects.create(
             title="Test ToDo",
             todo="This is a test ToDo",
-            deadline=datetime.utcnow() + timedelta(days=7),
+            deadline=timezone.now() + timezone.timedelta(days=7),
             owner=self.user,
         )
 
@@ -37,7 +43,7 @@ class ToDoModelTest(TestCase):
         """
         new_title = "Updated ToDo Title"
         new_todo_content = "This ToDo has been updated."
-        new_deadline = datetime.utcnow() + timedelta(days=14)
+        new_deadline = timezone.now() + timezone.timedelta(days=14)
 
         self.todo.title = new_title
         self.todo.todo = new_todo_content
