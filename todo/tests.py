@@ -7,8 +7,8 @@ from .models import ToDo
 # Create your tests here.
 
 TODO_VALID_DATA = {
-    "title": "Test Task",
-    "todo": "Do something",
+    "title": "Test ToDo",
+    "todo": "This is a test ToDo",
     "created": timezone.now(),
     "deadline": timezone.now() + timezone.timedelta(days=1),
 }
@@ -21,9 +21,7 @@ class ToDoModelTest(TestCase):
 
         # Create a ToDo instance for testing
         self.todo = ToDo.objects.create(
-            title="Test ToDo",
-            todo="This is a test ToDo",
-            deadline=timezone.now() + timezone.timedelta(days=7),
+            **TODO_VALID_DATA,
             owner=self.user,
         )
 
