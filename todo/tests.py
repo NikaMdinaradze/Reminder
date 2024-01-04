@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.utils import timezone
 
-from .models import ToDo
+from todo.models import ToDo
 
 # Create your tests here.
 
@@ -11,6 +11,12 @@ TODO_VALID_DATA = {
     "todo": "This is a test ToDo",
     "created": timezone.now(),
     "deadline": timezone.now() + timezone.timedelta(days=1),
+}
+TODO_INVALID_DATA = {
+    "title": "Test ToDo",
+    "todo": "This is a test ToDo",
+    "created": timezone.now(),
+    "deadline": timezone.now() - timezone.timedelta(days=1),
 }
 
 

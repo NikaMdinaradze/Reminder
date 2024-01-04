@@ -3,7 +3,7 @@ install_requirements:
 	docker-compose down && docker-compose build
 
 
-makemigrations:
+migrations:
 	@echo "Making Migration files"
 	docker-compose run --rm web python manage.py makemigrations
 
