@@ -3,6 +3,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from todo.models import ToDo
+from todo.serializers import ToDoSerializer
 
 # Create your tests here.
 TODO_WITHOUT_DEFAULTS = {
@@ -75,3 +76,59 @@ class ToDoModelTest(TestCase):
         self.assertEqual(todo_defaults.title, "")
         self.assertTrue(todo_defaults.active)
         self.assertEqual(todo_defaults.category, "")
+
+
+class ToDoSerializerTests(TestCase):
+    def test_valid_todo_serializer(self):
+        valid_data = TODO_VALID_DATA
+
+        serializer = ToDoSerializer(data=valid_data)
+        self.assertTrue(serializer.is_valid())
+        self.assertEqual(serializer.errors, {})
+
+    def test_invalid_todo_serializer(self):
+        invalid_data = {
+            "title": "Invalid ToDo",
+            "todo": "This is an invalid ToDo",
+            "category": "InvalidCategory",
+            "active": True,
+            "deadline": timezone.now() - timezone.timedelta(days=7),
+        }
+
+        serializer = ToDoSerializer(data=invalid_data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn(
+            "deadline must be after current time", serializer.errors["non_field_errors"]
+        )
+        self.assertIn(
+            "The category should be lowercase", serializer.errors["non_field_errors"]
+        )
+
+    def test_valid_todo_serializer_with_long_deadline(self):
+        valid_data = {
+            "title": "Complete Assignment",
+            "todo": "Finish the coding assignment",
+            "category": "personal",
+            "active": True,
+            "deadline": timezone.now() + timezone.timedelta(days=365 * 9),
+        }
+
+        serializer = ToDoSerializer(data=valid_data)
+        self.assertTrue(serializer.is_valid())
+        self.assertEqual(serializer.errors, {})
+
+    def test_invalid_todo_serializer_with_long_deadline(self):
+        invalid_data = {
+            "title": "Invalid ToDo",
+            "todo": "This is an invalid ToDo",
+            "category": "personal",
+            "active": True,
+            "deadline": timezone.now() + timezone.timedelta(days=365 * 11),
+        }
+
+        serializer = ToDoSerializer(data=invalid_data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn(
+            "The deadline cannot be longer than ten years",
+            serializer.errors["non_field_errors"],
+        )
