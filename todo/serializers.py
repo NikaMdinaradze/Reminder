@@ -1,5 +1,6 @@
-from django.utils import timezone
 from rest_framework import serializers
+
+from todo.validators import ToDoValidator
 
 from .models import ToDo
 
@@ -9,14 +10,21 @@ class ToDoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ToDo
-        fields = ["id", "title", "todo", "created", "deadline", "owner"]
+        fields = (
+            "id",
+            "title",
+            "todo",
+            "category",
+            "created",
+            "deadline",
+            "owner",
+            "active",
+        )
 
     def validate(self, attrs):
-        """
-        Check that the creation time is before the deadline.
-        """
-        if attrs["deadline"] < timezone.now():
-            raise serializers.ValidationError("deadline must be after current time")
+        validator = ToDoValidator(**attrs)
+        if errors := validator():
+            raise serializers.ValidationError(errors)
         return attrs
 
     def perform_create(self, serializer):

@@ -5,18 +5,24 @@ from django.utils import timezone
 from todo.models import ToDo
 
 # Create your tests here.
-
-TODO_VALID_DATA = {
-    "title": "Test ToDo",
+TODO_WITHOUT_DEFAULTS = {
     "todo": "This is a test ToDo",
-    "created": timezone.now(),
     "deadline": timezone.now() + timezone.timedelta(days=1),
 }
-TODO_INVALID_DATA = {
+
+TODO_VALID_DATA = {
+    **TODO_WITHOUT_DEFAULTS,
     "title": "Test ToDo",
-    "todo": "This is a test ToDo",
+    "created": timezone.now(),
+    "active": True,
+    "category": "testing",
+}
+TODO_INVALID_DATA = {
+    **TODO_WITHOUT_DEFAULTS,
+    "title": "Test ToDo",
     "created": timezone.now(),
     "deadline": timezone.now() - timezone.timedelta(days=1),
+    "category": "testing",
 }
 
 
@@ -40,6 +46,8 @@ class ToDoModelTest(TestCase):
         self.assertIsNotNone(self.todo.created)
         self.assertIsNotNone(self.todo.deadline)
         self.assertEqual(self.todo.owner, self.user)
+        self.assertTrue(self.todo.active)
+        self.assertEqual(self.todo.category, "testing")
 
     def test_todo_update(self):
         """
@@ -57,3 +65,13 @@ class ToDoModelTest(TestCase):
         updated_todo = ToDo.objects.get(id=self.todo.id)
         self.assertEqual(updated_todo.title, new_title)
         self.assertEqual(updated_todo.todo, new_todo_content)
+
+    def test_defaults(self):
+        """
+        Test Default Values
+        """
+        todo_defaults = ToDo.objects.create(**TODO_WITHOUT_DEFAULTS, owner=self.user)
+
+        self.assertEqual(todo_defaults.title, "")
+        self.assertTrue(todo_defaults.active)
+        self.assertEqual(todo_defaults.category, "")
