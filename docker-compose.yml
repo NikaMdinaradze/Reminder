@@ -31,6 +31,20 @@ services:
       timeout: 5s
       retries: 3
 
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile-celery
+    volumes:
+      - .:/code
+    depends_on:
+      db:
+        condition: 'service_healthy'
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
   redis:
     image: redis:7.0.11-alpine
 
