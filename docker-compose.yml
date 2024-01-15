@@ -2,8 +2,9 @@ version: '3'
 
 services:
   web:
-    build: .
-    command: python /code/manage.py runserver 0.0.0.0:8000
+    build:
+      context: .
+      dockerfile: Dockerfile-django
     volumes:
       - .:/code
     ports:
@@ -12,7 +13,7 @@ services:
       db:
         condition: 'service_healthy'
     environment:
-      - POSTGRES_NAME=postgres  # Change from POSTGRES_NAME to POSTGRES_DB
+      - POSTGRES_NAME=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 
