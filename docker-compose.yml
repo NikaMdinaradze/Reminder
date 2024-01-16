@@ -35,6 +35,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-celery
+    command: celery -A core worker --loglevel=INFO --beat --scheduler django_celery_beat.schedulers:DatabaseScheduler -l info
     volumes:
       - .:/code
     depends_on:

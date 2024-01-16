@@ -37,8 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "rest_framework",
-    'drf_spectacular',
+
 
     # my_apps
     "todo",
@@ -46,6 +45,10 @@ INSTALLED_APPS = [
 
     #third-party
     'rest_framework_simplejwt',
+    "rest_framework",
+    'drf_spectacular',
+    "celery",
+    "django_celery_beat"
 ]
 
 MIDDLEWARE = [
@@ -151,3 +154,4 @@ REST_FRAMEWORK = {
 }
 
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND", "redis://redis:6379/0")
