@@ -1,8 +1,3 @@
-install_requirements:
-	@echo "Installing requirements"
-	docker-compose down && docker-compose build
-
-
 migrations:
 	@echo "Making Migration files"
 	docker-compose run --rm web python manage.py makemigrations
@@ -17,7 +12,7 @@ build:
 
 run:
 	@echo "starting API test server docker"
-	docker-compose up
+	docker-compose run --rm web python manage.py migrate&&docker-compose up
 
 run_tests:
 	@echo "running tests docker"
