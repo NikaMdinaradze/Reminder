@@ -13,3 +13,4 @@ class ToDo(models.Model):
     owner = models.ForeignKey(
         "auth.User", related_name="todos", on_delete=models.CASCADE, null=False
     )
+    notified = models.BooleanField(default=False)

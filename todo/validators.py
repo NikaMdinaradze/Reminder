@@ -31,7 +31,7 @@ class ToDoValidator:
         if not self.category.islower():
             self.errors.append("The category should be lowercase")
 
-    def __call__(self, *args, **kwargs):
+    def perform_check(self):
         self._check_deadline_duration()
         self._check_category_lowercase()
         self._check_deadline_with_current_time()

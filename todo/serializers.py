@@ -23,7 +23,7 @@ class ToDoSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         validator = ToDoValidator(**attrs)
-        if errors := validator():
+        if errors := validator.perform_check():
             raise serializers.ValidationError(errors)
         return attrs
 
