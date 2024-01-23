@@ -1,3 +1,6 @@
+import uuid
+
+from django.core.cache import cache
 from django.http import Http404
 from rest_framework import permissions, status
 from rest_framework.response import Response
@@ -16,7 +19,8 @@ class Register(APIView):
         serializer = self.serializer_class(data=user)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        serializer.save()
+        code = uuid.uuid4()
+        cache.set(code, serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
