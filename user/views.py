@@ -1,10 +1,14 @@
-import uuid
-
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.cache import cache
+from django.core.mail import send_mail
 from django.http import Http404
+from django.urls import reverse
+from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from core import settings
 
 from .serializers import UserSerializer
 
@@ -14,13 +18,52 @@ class Register(APIView):
     serializer_class = UserSerializer
 
     def post(self, request):
-        """Creates User (Registration)"""
+        """Request User  Creation(Registration)"""
         user = request.data
         serializer = self.serializer_class(data=user)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        code = uuid.uuid4()
-        cache.set(code, serializer.data)
+        key = serializer.save_cached()
+        site_url = get_current_site(request)
+        url = f"{site_url}{reverse('user-register')}?code={key}"
+
+        send_mail(
+            subject="Verify",
+            message=url,
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[user["email"]],
+            fail_silently=False,
+        )
+
+        return Response("Verify from Email", status=status.HTTP_201_CREATED)
+
+    @extend_schema(
+        # extra parameters added to the schema
+        parameters=[
+            OpenApiParameter(name="code", description="Email code", type=str),
+        ],
+    )
+    def get(self, request):
+        """Verify User"""
+        code = request.query_params.get("code", None)
+        if code is None:
+            return Response(
+                {"error": "Code parameter is required."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        user = cache.get(code)
+        if user is None:
+            return Response(
+                {"error": "User not found for the given code."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        serializer = self.serializer_class(data=user)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
