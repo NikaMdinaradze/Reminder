@@ -6,3 +6,4 @@ WORKDIR /code
 COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 COPY . .
+CMD ["celery", "-A", "core", "worker", "--loglevel=INFO", "--beat", "--scheduler","django_celery_beat.schedulers:DatabaseScheduler", "-l", "info"]
