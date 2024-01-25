@@ -1,6 +1,5 @@
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.cache import cache
-from django.core.mail import send_mail
 from django.http import Http404
 from django.urls import reverse
 from drf_spectacular.utils import OpenApiParameter, extend_schema
@@ -8,7 +7,7 @@ from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from core import settings
+from user.tasks import send_verification_email
 
 from .serializers import UserSerializer
 
@@ -26,19 +25,10 @@ class Register(APIView):
         key = serializer.save_cached()
         site_url = get_current_site(request)
         url = f"{site_url}{reverse('user-register')}?code={key}"
-
-        send_mail(
-            subject="Verify",
-            message=url,
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[user["email"]],
-            fail_silently=False,
-        )
-
+        send_verification_email.delay(user["email"], url)
         return Response("Verify from Email", status=status.HTTP_201_CREATED)
 
     @extend_schema(
-        # extra parameters added to the schema
         parameters=[
             OpenApiParameter(name="code", description="Email code", type=str),
         ],

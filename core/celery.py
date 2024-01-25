@@ -9,6 +9,6 @@ app.autodiscover_tasks()
 
 @app.task(bind=True, ignore_result=True)
 def debug_task(self):
-    print("Ana magaria")
+    print("Test")
 
 app.autodiscover_tasks()
