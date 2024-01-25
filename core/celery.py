@@ -8,7 +8,9 @@ app.autodiscover_tasks()
 
 
 @app.task(bind=True, ignore_result=True)
-def debug_task(self):
-    print("Test")
+def debug_task(self, message="Test"):
+    result = f"{message} - Task ID: {self.request.id}"
+    print(result)
+    return result
 
 app.autodiscover_tasks()
