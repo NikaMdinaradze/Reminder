@@ -20,5 +20,5 @@ class UserSerializer(serializers.ModelSerializer):
         """Saves User Information in Cache and Returns Redis Key"""
         data = self.validated_data
         key = uuid.uuid4()
-        cache.set(key, data)
+        cache.set(key, data, timeout=24 * 60 * 60)  # 24 hours
         return key

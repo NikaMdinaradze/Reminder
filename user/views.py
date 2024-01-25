@@ -45,7 +45,7 @@ class Register(APIView):
         user = cache.get(code)
         if user is None:
             return Response(
-                {"error": "User not found for the given code."},
+                {"error": "User not found for the given code or it is expired."},
                 status=status.HTTP_404_NOT_FOUND,
             )
 
