@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 from django.core.cache import cache
 from rest_framework import serializers
 
+from user.validators import UserValidator
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,6 +17,12 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data["password"] = make_password(validated_data["password"])
         return super(UserSerializer, self).create(validated_data)
+
+    def validate(self, attrs):
+        validator = UserValidator(**attrs)
+        if errors := validator.perform_check():
+            raise serializers.ValidationError(errors)
+        return attrs
 
     def save_cached(self):
         """Saves User Information in Cache and Returns Redis Key"""
