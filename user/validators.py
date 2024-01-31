@@ -15,10 +15,9 @@ class UserValidator:
             self.errors.append("Password must be at least 8 characters")
 
     def _check_email(self):
-        pattern = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+        pattern = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b"
 
-        match = re.match(pattern, self.email)
-        if bool(match):
+        if not re.fullmatch(pattern, self.email):
             self.errors.append("Invalid email")
 
     def _check_first_name(self):
@@ -26,7 +25,7 @@ class UserValidator:
             self.errors.append("Invalid first name")
 
     def _check_last_name(self):
-        if len(self.first_name) <= 0:
+        if len(self.last_name) <= 0:
             self.errors.append("Invalid last name")
 
     def perform_check(self):

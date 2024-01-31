@@ -39,4 +39,4 @@ class RegisterViewTests(TestCase):
         ]
         for data in invalid_data:
             response = self.client.post(self.url, data.write_only_payload())
-            print(response)
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
