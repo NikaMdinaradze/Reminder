@@ -1,5 +1,7 @@
 import re
 
+from django.contrib.auth.models import User
+
 
 class UserValidator:
     def __init__(self, username, password, email, first_name, last_name):
@@ -27,6 +29,10 @@ class UserValidator:
     def _check_last_name(self):
         if len(self.last_name) <= 0:
             self.errors.append("Invalid last name")
+
+    def _check_unique_mail(self):
+        if User.objects.filter(email=self.email):
+            self.errors.append("Email already exist")
 
     def perform_check(self):
         self._check_password()

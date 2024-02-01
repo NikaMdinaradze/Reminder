@@ -16,8 +16,12 @@ run:
 
 run_tests:
 	@echo "running tests docker"
-	docker-compose run --rm web python manage.py test
+	docker-compose run --rm web coverage run manage.py test
 
 createsuperuser:
 	@echo "creating super user"
 	docker-compose run --rm web python manage.py createsuperuser
+
+coverage_report:
+	@echo "getting coverage results"
+	docker-compose run --rm web coverage report -m
